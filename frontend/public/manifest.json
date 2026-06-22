@@ -1,0 +1,17 @@
+{
+  "name": "RoadAid India Emergency",
+  "short_name": "RoadAid",
+  "description": "Report Road Accidents Instantly. Save Lives Faster.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#dc2626",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/822/822143.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
