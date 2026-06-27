@@ -19,7 +19,7 @@ export default function DashboardPage() {
   const [incidents, setIncidents] = useState([]);
   const [hospitals, setHospitals] = useState([]);
   const [activeIncidentId, setActiveIncidentId] = useState(null);
-  const [mapCenter, setMapCenter] = useState([28.5672, 77.2100]); // Delhi
+  const [mapCenter, setMapCenter] = useState([28.5800, 77.2300]); // Delhi NCR center
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [syncingOffline, setSyncingOffline] = useState(false);
   const [offlineCount, setOfflineCount] = useState(0);
@@ -200,6 +200,11 @@ export default function DashboardPage() {
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
             Real-time emergency telemetry for Indian public responders.
+            {hospitals.length > 0 && (
+              <span className="ml-2 text-xs font-bold bg-teal-100 dark:bg-teal-950/30 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-teal-800 px-2 py-0.5 rounded-full">
+                🏥 {hospitals.length} hospitals mapped
+              </span>
+            )}
           </p>
         </div>
 

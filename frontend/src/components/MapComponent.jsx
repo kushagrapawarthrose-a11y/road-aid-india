@@ -37,12 +37,13 @@ function RecenterMap({ center }) {
 }
 
 export default function MapComponent({ incidents, hospitals, center, activeIncidentId }) {
-  const defaultCenter = [28.5672, 77.2100]; // New Delhi
+  // Center on Delhi NCR region to show all hospitals
+  const defaultCenter = [28.5800, 77.2300]; // Delhi NCR geographic center
 
   return (
     <MapContainer
       center={center || defaultCenter}
-      zoom={13}
+      zoom={11}
       style={{ height: '100%', width: '100%' }}
     >
       <TileLayer
@@ -59,17 +60,29 @@ export default function MapComponent({ incidents, hospitals, center, activeIncid
           icon={hospitalIcon}
         >
           <Popup>
-            <div className="text-slate-900 font-sans p-1">
-              <h4 className="font-extrabold text-sm mb-1">{h.name}</h4>
-              <p className="text-xs text-gray-500 mb-2">{h.address}</p>
+            <div className="text-slate-900 font-sans p-1" style={{minWidth:'200px'}}>
+              <h4 className="font-extrabold text-sm mb-0.5">{h.name}</h4>
+              <p className="text-xs text-gray-500 mb-1">{h.address}</p>
+              <p className="text-xs font-semibold text-blue-600 mb-2">📞 {h.phone}</p>
               <div className="grid grid-cols-2 gap-2 border-t border-gray-100 pt-2 text-xs">
                 <div>
-                  <span className="font-medium text-gray-400 block uppercase">Beds Available</span>
-                  <span className="font-extrabold text-emergency-teal">{h.availableBeds} / {h.totalBeds}</span>
+                  <span className="font-medium text-gray-400 block uppercase">Beds Free</span>
+                  <span className="font-extrabold text-teal-600">{h.availableBeds} / {h.totalBeds}</span>
                 </div>
                 <div>
                   <span className="font-medium text-gray-400 block uppercase">Ambulances</span>
-                  <span className="font-extrabold text-emergency-blue">{h.ambulances} active</span>
+                  <span className="font-extrabold text-blue-600">{h.ambulances} ready</span>
+                </div>
+                <div>
+                  <span className="font-medium text-gray-400 block uppercase">Ventilators</span>
+                  <span className="font-extrabold text-purple-600">{h.ventilators}</span>
+                </div>
+                <div>
+                  <span className="font-medium text-gray-400 block uppercase">Status</span>
+                  <span className={`font-extrabold uppercase ${
+                    h.status === 'ACTIVE' ? 'text-green-600' :
+                    h.status === 'BUSY' ? 'text-orange-600' : 'text-red-600'
+                  }`}>{h.status}</span>
                 </div>
               </div>
             </div>

@@ -1,19 +1,38 @@
-# 🏥 RoadAid: India Emergency Response & Ambulance Triage System
+# 🏥 RoadAid India — Emergency Response & Ambulance Triage System
 
-**RoadAid** is a modern, responsive, and real-time emergency coordination platform designed to minimize accident response times. It enables citizens to instantly report road accidents, auto-detects geolocation, uses distance algorithms to match the nearest hospital, and dispatches responders instantly.
+**RoadAid** is a modern, real-time emergency coordination platform built specifically for Indian road accident scenarios. Citizens instantly report accidents with GPS, AI photo analysis, and voice dictation — while the nearest hospital is auto-dispatched using Haversine distance algorithms.
 
 ---
 
 ## 🚀 Key Features
 
-* **Instant Geolocation Reporting**: One-click reporting with browser Geolocation API coordinates, customizable landmarks, and manual fallback adjustments.
-* **Smart Hospital Allocation**: Uses the **Haversine formula** to compute distances and estimate travel times, automatically assigning the closest active hospital to the accident location.
-* **Real-time Live Telemetry**: Full integration with **Socket.io** to broadcast alerts instantly, update status timelines, and sound sirens in triage rooms.
-* **Multilingual Translation Support**: Integrated translation framework supporting both English (EN) and Hindi (HI) languages.
-* **Offline Incident Cache**: Local storage caching system that saves accident reports filed during network outages, auto-syncing them once internet is recovered.
-* **AI Severity Estimation (Simulated)**: Processes uploaded accident photos to automatically predict incident severity level (Critical, Moderate, Minor) and log visual diagnostics.
-* **Speech-to-Text Dictation**: Uses the browser's Web Speech API (`SpeechRecognition`) for hands-free incident descriptions in both English and Hindi.
-* **Progressive Web App (PWA)**: Completely mobile-optimized and installable as a native app on iOS or Android.
+| Feature | Description |
+|---|---|
+| 📍 **Instant GPS Reporting** | One-click report with automatic browser Geolocation, photo upload, and manual map fallback |
+| 🧠 **Smart Hospital Allocation** | Haversine formula computes distances to all 25 partner hospitals and assigns the nearest active one |
+| ⚡ **Real-time Telemetry** | Socket.io broadcasts alerts instantly — live status updates, sound sirens in triage rooms |
+| 🌐 **Multilingual UI** | English (EN) and Hindi (हिंदी) support with live language switcher in the Navbar |
+| 📴 **Offline Incident Cache** | LocalStorage caching saves reports during outages and auto-syncs when internet returns |
+| 🤖 **AI Severity Estimation** | Accident photo analysis predicts CRITICAL / MODERATE / MINOR severity with confidence score |
+| 🎤 **Voice Dictation** | Web Speech API (`SpeechRecognition`) for hands-free reporting in EN & HI |
+| 📱 **Progressive Web App** | Fully mobile-optimized, installable on iOS/Android with PWA manifest |
+| 🏥 **25 Delhi NCR Hospitals** | Real hospitals across Central, South, East, North Delhi, Noida, Gurugram, Faridabad & Ghaziabad |
+| 🗺️ **Interactive OpenStreetMap** | Leaflet map showing live incidents + all partner hospitals with live popup info |
+
+---
+
+## 🗺️ Partner Hospitals Coverage
+
+**25 real hospitals** mapped across the entire Delhi NCR region:
+
+- 🔴 **Central Delhi** — AIIMS, Safdarjung, RML, Lady Hardinge, Lok Nayak
+- 🟠 **South Delhi** — Max Saket, Fortis Vasant Kunj, Apollo Cradle, Moolchand, Holy Family, Primus
+- 🟡 **South-East** — Indraprastha Apollo, Venkateshwar Dwarka
+- 🟢 **North Delhi** — Hindu Rao, St. Stephen's, Max Shalimar Bagh, BLK-Max
+- 🔵 **East Delhi** — GTB Hospital Shahdara
+- 🟣 **Noida** — Fortis Noida, Kailash Hospital
+- ⚫ **Gurugram** — Medanta, Artemis, Paras Hospital
+- 🟤 **NCR Outskirts** — Asian Hospital Faridabad, Yashoda Hospital Ghaziabad
 
 ---
 
@@ -21,16 +40,21 @@
 
 ```mermaid
 graph TD
-    Citizen[Citizen User] -->|1. File Report| ReportPage[Reporting Interface / SOS]
-    ReportPage -->|Browser GPS / Web Speech| API[Express API Server]
-    API -->|Haversine Formula| Matching[Nearest Hospital Search]
-    API -->|Persist Records| DB[(SQLite Database / Prisma)]
-    Matching -->|2. Assign Hospital| API
-    API -->|3. Socket.io Alert| Hospital[Hospital Portal]
-    API -->|3. Socket.io Alert| Admin[Admin Dashboard]
-    Hospital -->|4. Accept / Dispatch| API
-    API -->|5. Status Update| LiveMap[Live Incident Map]
+    Citizen[👤 Citizen / Reporter] -->|1. File Report + GPS| ReportPage[📋 Report Page]
+    ReportPage -->|Photo / Voice / Text| API[⚙️ Express API Server :5000]
+    API -->|Haversine Algorithm| Matching[🔍 Nearest Hospital Search]
+    API -->|Persist| DB[(🗄️ SQLite / Prisma ORM)]
+    Matching -->|2. Auto-Assign| API
+    API -->|3. Socket.io Alert 🔔| Hospital[🏥 Hospital Triage Portal]
+    API -->|3. Socket.io Alert 🔔| Admin[📊 Admin Dashboard]
+    Hospital -->|4. Accept & Dispatch 🚑| API
+    API -->|5. Live Status Broadcast| LiveMap[🗺️ Incident Map Dashboard]
+    LiveMap -->|Real-time Updates| Citizen
 ```
+
+## 📸 Interface Preview
+
+![RoadAid Landing Page](./landing_page_preview.png)
 
 ---
 
@@ -39,61 +63,105 @@ graph TD
 ```text
 road-aid/
 ├── backend/
-│   ├── prisma/             # Prisma SQLite Schema and Seed scripts
-│   └── src/                # Express API and Socket.io server
+│   ├── prisma/
+│   │   ├── schema.prisma       # Data models: User, Hospital, Incident
+│   │   └── seed.js             # 25 real Delhi NCR hospitals seed script
+│   └── src/
+│       ├── server.js           # Express + Socket.io API engine
+│       └── middleware/auth.js  # JWT authentication middleware
 ├── frontend/
-│   ├── src/app/            # Next.js App Router Page components
-│   ├── src/components/     # Shared layout components (Leaflet maps, Navbar)
-│   └── public/             # PWA assets and manifests
-└── run-node.ps1            # Portable Node/NPM wrapper script
+│   ├── src/app/
+│   │   ├── page.js             # Landing page (EN/HI bilingual)
+│   │   ├── report/page.js      # Accident reporting (GPS + AI + Voice)
+│   │   ├── dashboard/page.js   # Live incident map & feed
+│   │   ├── hospital/page.js    # Hospital triage portal
+│   │   └── admin/page.js       # Admin analytics & CSV export
+│   └── src/components/
+│       ├── MapComponent.jsx    # Leaflet OSM map with hospital markers
+│       └── Navbar.jsx          # Top nav with EN/HI language switcher
+├── run-node.ps1                # Portable Node/NPM wrapper (Windows)
+└── setup.ps1                   # One-time environment bootstrap script
 ```
 
 ---
 
-## 💻 Local Installation & Setup
+## 💻 Local Setup & Installation
 
-RoadAid is built with a self-contained, portable environment. You do not need to install Node or NPM globally.
+> RoadAid uses a **portable Node.js environment** — no global Node/NPM installation required.
 
-### 1. Prerequisite Setup
-Initialize the portable Node.js environment (installs v20.18.0 LTS locally to the workspace):
+### 1. Bootstrap the Environment
 ```powershell
 powershell -ExecutionPolicy Bypass -File setup.ps1
 ```
 
-### 2. Configure Backend
-Install dependencies and run Prisma database migrations:
+### 2. Backend Setup
 ```powershell
 cd backend
-powershell -ExecutionPolicy Bypass -File ../run-node.ps1 npm install
-powershell -ExecutionPolicy Bypass -File ../run-node.ps1 npx prisma db push
-powershell -ExecutionPolicy Bypass -File ../run-node.ps1 prisma/seed.js
-```
 
-Start the Express API server:
-```powershell
+# Install dependencies
+powershell -ExecutionPolicy Bypass -File ../run-node.ps1 npm install
+
+# Push Prisma schema to SQLite
+powershell -ExecutionPolicy Bypass -File ../run-node.ps1 npx prisma db push
+
+# Seed 25 Delhi NCR hospitals
+powershell -ExecutionPolicy Bypass -File ../run-node.ps1 prisma/seed.js
+
+# Start Express + Socket.io API server
 powershell -ExecutionPolicy Bypass -File ../run-node.ps1 src/server.js
 ```
 
-### 3. Configure Frontend
-Open a new terminal tab and configure the Next.js client:
+### 3. Frontend Setup
 ```powershell
 cd frontend
+
+# Install dependencies
 powershell -ExecutionPolicy Bypass -File ../run-node.ps1 npm install
+
+# Start Next.js dev server
 powershell -ExecutionPolicy Bypass -File ../run-node.ps1 npm run dev
 ```
 
-The application will be live at:
-* **Citizen Portal**: `http://localhost:3000`
-* **Live Incident Map**: `http://localhost:3000/dashboard`
-* **Hospital Portal**: `http://localhost:3000/hospital`
-* **Admin Dashboard**: `http://localhost:3000/admin`
+### 4. Open in Browser
+
+| Portal | URL |
+|---|---|
+| 🏠 Citizen Home | `http://localhost:3000` |
+| 🚨 Report Accident | `http://localhost:3000/report` |
+| 🗺️ Live Incident Map | `http://localhost:3000/dashboard` |
+| 🏥 Hospital Portal | `http://localhost:3000/hospital` |
+| 📊 Admin Dashboard | `http://localhost:3000/admin` |
 
 ---
 
-## 🔐 Credentials for Seeding Accounts
+## 🔐 Default Login Credentials
 
-* **Administrator**: `admin@roadaid.in` / `admin123`
-* **AIIMS Delhi Hospital**: `emergency@aiims.edu` / `password123`
-* **Safdarjung Hospital**: `emergency@safdarjunghospital.gov.in` / `password123`
-* **Max Saket**: `saket@maxhealthcare.com` / `password123`
-* **Medanta Gurugram**: `info@medanta.org` / `password123`
+| Role | Email | Password |
+|---|---|---|
+| Administrator | `admin@roadaid.in` | `admin123` |
+| AIIMS Delhi | `emergency@aiims.edu` | `password123` |
+| Safdarjung Hospital | `emergency@safdarjunghospital.gov.in` | `password123` |
+| Max Saket | `saket@maxhealthcare.com` | `password123` |
+| Medanta Gurugram | `info@medanta.org` | `password123` |
+
+---
+
+## 🏗️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | Next.js 14, React 18, Tailwind CSS |
+| Maps | Leaflet.js + React-Leaflet (OpenStreetMap) |
+| Animations | Framer Motion |
+| Backend | Node.js, Express 4, Socket.io 4 |
+| Database | SQLite (via Prisma ORM) |
+| Auth | JWT + bcryptjs |
+| Icons | Lucide React |
+| PWA | Web App Manifest + Service Worker |
+| Speech | Web Speech API (SpeechRecognition) |
+
+---
+
+## 📜 License
+
+MIT License — Built with ❤️ for India's Road Safety
