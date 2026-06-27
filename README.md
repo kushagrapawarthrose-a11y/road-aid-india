@@ -34,15 +34,6 @@ graph TD
 
 ---
 
-## 📸 Interface Preview
-
-Here is a preview of the interactive landing page and live dashboard:
-
-![RoadAid Landing Page](<img width="1920" height="1080" alt="Road Aid India Landing Page" src="https://github.com/user-attachments/assets/7193c5ca-7710-499a-94d8-6b9ec9fc4199" />
-)
-
----
-
 ## 📂 Project Structure
 
 ```text
