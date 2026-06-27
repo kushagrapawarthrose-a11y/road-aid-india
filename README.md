@@ -95,3 +95,5 @@ The application will be live at:
 * **Administrator**: `admin@roadaid.in` / `admin123`
 * **AIIMS Delhi Hospital**: `emergency@aiims.edu` / `password123`
 * **Safdarjung Hospital**: `emergency@safdarjunghospital.gov.in` / `password123`
+* **Max Saket**: `saket@maxhealthcare.com` / `password123`
+* **Medanta Gurugram**: `info@medanta.org` / `password123`
